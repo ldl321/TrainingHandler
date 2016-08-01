@@ -1,5 +1,7 @@
 package com.li.trainingmultiplethread;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     mProgressBar.setProgress((int)msg.obj);
                     break;
+                case 2:
+                    mImageView.setImageBitmap((Bitmap) msg.obj);
+                    break;
             }
             //mProgressBar.setProgress();
         }
@@ -49,16 +54,23 @@ public class MainActivity extends AppCompatActivity {
                         new Runnable() {
                             @Override
                             public void run() {
-                                Message msg = new Message();
+                                Message msg = mHandler.obtainMessage();
                                 msg.what = 0; //表示让progressbar显示出来
                                 mHandler.sendMessage(msg);
                                 for (int i = 1; i < 11; i++) {
                                     sleep();
-                                   Message msg2 = new Message();
+                                   Message msg2 = mHandler.obtainMessage();
                                     msg2.what = 1; //表示让progressbar往前走
                                     msg2.obj = i * 10;
                                     mHandler.sendMessage(msg2);
                                 }
+
+                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                                        R.drawable.ic_launcher);
+                                Message msgBitMap = mHandler.obtainMessage();
+                                msgBitMap.what = 2; //更新image
+                                msgBitMap.obj = bitmap;
+                                mHandler.sendMessage(msgBitMap);
                             }
 
                             private void sleep() {
